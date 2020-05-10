@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/envthon
 # coding: utf-8
 
 import requests
@@ -117,7 +117,7 @@ def get_compare_master(pdf_new):
     new_ignored = pdf_new[pdf_new['Status']=='0 Ignored']['Job ID'].count()  
 
     # Open and cast the master
-    pdf_master = pd.read_csv('master.csv')
+    pdf_master = pd.read_csv('../data/master.csv')
     pdf_master['Job ID'] = pdf_master['Job ID'].astype(str)
     # Measure the jobs per status in the master
     master_open = pdf_master[pdf_master['Status']=='3 Open']['Job ID'].count()
@@ -168,7 +168,7 @@ def update_master(pdf, master_filename=None, verbose=False):
     if master_filename:
         pdf.to_csv(master_filename, index=False)
     else:
-        pdf.to_csv('master.csv',index=False)
+        pdf.to_csv('../data/master.csv',index=False)
     
     return None
 

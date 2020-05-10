@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/envthon
 # coding: utf-8
 
 import requests
@@ -61,6 +61,7 @@ def get_source_dir(filename, directory, verbose=False):
 
 #strings_to_check_for = ["|", "(", ")", ".html.", ".m.b.H.", "html.html", "html_files", "files_files"]
 strings_to_check_for = ["|", "(", ")","-", ",", ".", "html"]
+
 def remove_substrings(checklist):
     
     def inner(string_to_check):
@@ -76,26 +77,11 @@ def remove_substrings(checklist):
 
 def rename_files_and_dirs(files, directory = './saved_webpages/', verbose=False):
 
-    #main_dir = os.path.abspath(directory)
-    '''
-    if 'Closed/' in directory:
-        directory = directory.replace('Closed/','')
-    elif 'Closed' in directory:
-        directory = directory.replace('Closed','')
-    elif 'Applied/' in directory:
-        directory = directory.replace('Applied/','')
-    elif 'Applied' in directory:
-        directory = directory.replace('Applied','')
-    else:
-        pass
-    '''
     dirs = directory + 'dirs/'
     
     for file_ in files:
 
-        # Check if the file is already processed
-        #if file_.split('_LinkedIn')[1] != '.html':
-        #if len(file_.split('_LinkedIn')) > 1:            
+        # Check if the file is already processed        
         if any([True for s in [' ']+strings_to_check_for[:-2] if s in file_]):
             if verbose: print('Processing:',file_)
         else:
@@ -129,19 +115,6 @@ def rename_files_and_dirs(files, directory = './saved_webpages/', verbose=False)
 
 def rename_remove_vert(files, directory = './saved_webpages/', verbose=False):
 
-    #main_dir = os.path.abspath(directory)
-    '''
-    if 'Closed/' in directory:
-        directory = directory.replace('Closed/','')
-    elif 'Closed' in directory:
-        directory = directory.replace('Closed','')
-    elif 'Applied/' in directory:
-        directory = directory.replace('Applied/','')
-    elif 'Applied' in directory:
-        directory = directory.replace('Applied','')
-    else:
-        pass
-    '''
     dirs = directory + 'dirs/'
     
     for file_ in files:

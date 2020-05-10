@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/envthon
 # coding: utf-8
 
 from helpers import get_cleaned_tags
