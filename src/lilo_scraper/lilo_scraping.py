@@ -117,7 +117,8 @@ def get_compare_master(pdf_new):
     new_ignored = pdf_new[pdf_new['Status']=='0 Ignored']['Job ID'].count()  
 
     # Open and cast the master
-    pdf_master = pd.read_csv('../data/master.csv')
+    # TODO: put this hardcoded dir into an argument
+    pdf_master = pd.read_csv('../../data/master.csv')
     pdf_master['Job ID'] = pdf_master['Job ID'].astype(str)
     # Measure the jobs per status in the master
     master_open = pdf_master[pdf_master['Status']=='3 Open']['Job ID'].count()
