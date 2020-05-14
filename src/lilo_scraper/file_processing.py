@@ -85,7 +85,7 @@ def rename_files_and_dirs(files, directory = './saved_webpages/', verbose=False)
         if any([True for s in [' ']+strings_to_check_for[:-2] if s in file_]):
             if verbose: print('Processing:',file_)
         else:
-            if verbose: print('\t\tAlready processed:',file_)
+            #if verbose: print('\t\tAlready processed:',file_)
             continue            
 
         
@@ -148,3 +148,45 @@ def rename_remove_vert(files, directory = './saved_webpages/', verbose=False):
         os.rename(source_dpath,dest_dpath)
 
     return None
+
+def get_paths(args_master, args_output):
+    
+        """Prepare the paths for the master DB and output DB
+        """
+        # Get the cwd; set as base path for the outer files
+        base_path = os.getcwd()
+        output_data_path = os.path.join(base_path)
+
+        # If both names specified, use them
+        if args_master and args_output:        
+            output_db = args_output
+            master_db = args_master
+        
+        # if only the master is specified, use it as output
+        elif args_master and args_output == None:
+            master_db = args_master            
+            output_db = args_master
+            
+        # if only the output is specified, try it as master, else skip master
+        elif args_output and args_master == None:
+            if os.path.exists(os.path.join(output_data_path, args_output)):
+                master_db = args_output 
+            else:
+                master_db = None
+            output_db = args_output  
+        
+        # if Nones: write to default & skip master
+        else:
+            master_db = None
+            # include a `data` dir to the path
+            output_data_path = os.path.join(output_data_path, 'data')
+            if os.path.exists(output_data_path) == False:  
+                os.mkdir(output_data_path)            
+            output_db = 'master.csv'
+
+        # If master, create its path
+        if master_db:
+            master_db = os.path.join(output_data_path, master_db)
+        output_db = os.path.join(output_data_path, output_db) 
+        
+        return master_db, output_db    
