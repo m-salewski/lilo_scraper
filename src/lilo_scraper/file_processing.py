@@ -60,7 +60,7 @@ def get_source_dir(filename, directory, verbose=False):
         
 
 #strings_to_check_for = ["|", "(", ")", ".html.", ".m.b.H.", "html.html", "html_files", "files_files"]
-strings_to_check_for = ["|", "(", ")","-", ",", ".", "html"]
+strings_to_check_for = ["|", "(", ")","-", ",", ".", "html", "&"]
 
 def remove_substrings(checklist):
     

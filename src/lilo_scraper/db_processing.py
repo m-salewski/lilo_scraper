@@ -67,7 +67,7 @@ def get_jobs_wrapper(directory, status, pdf, verbose=False):
     
     if (pdf is not None) & (pdf_new.empty == False):
         if verbose: print(f'Adding new {status_str} files')        
-        return pd.concat([pdf, pdf_new])    
+        return pd.concat([pdf, pdf_new], sort=False)    
     else:
         if verbose: print(f'Only new {status_str} files')
         return pdf_new
@@ -88,7 +88,7 @@ def get_jobs_df(files, verbose=False):
     for filename in files:
         
         if verbose:
-            print(f'{nn} of {len(files)}')
+            print(f'{nn} of {len(files)}, {filename}')
         
         # Get the creation date of the html
         cdatetime = datetime.datetime.fromtimestamp(os.path.getctime(filename))

@@ -4,6 +4,13 @@
 import datetime
 
 def get_deutsch(trial_text):
+    
+    if (trial_text == '') | (trial_text == None):
+        return '--missing--'
+    
+    if len(trial_text) == 0:
+        return '--missing--'
+    
     if ('ü' in trial_text) | \
 	('Ü' in trial_text) | \
 	('ö' in trial_text) | \
