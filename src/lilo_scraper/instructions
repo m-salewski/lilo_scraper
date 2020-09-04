@@ -1,0 +1,1 @@
+python3 lilo_scraping.py -d ../../../linkedin_local_scraper/saved_webpages/ -o ../../data/master_test.csv -v

@@ -4,6 +4,10 @@
 import datetime
 
 def get_deutsch(trial_text):
+    
+    if trial_text == None:
+        return None
+    
     if ('ü' in trial_text) | \
 	('Ü' in trial_text) | \
 	('ö' in trial_text) | \
@@ -24,6 +28,10 @@ def get_deutsch(trial_text):
 
 
 def get_cleaned_tags(tagtext):
+
+    if tagtext == None:
+        print('tagtext error')
+        return None
     
     # Clean the double spaces
     while '  ' in tagtext:

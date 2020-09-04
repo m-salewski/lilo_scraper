@@ -35,7 +35,13 @@ def get_master_jobids(master_db):
     return pd.read_csv(master_db)['Job ID'].astype(str).tolist()
 
 
-get_jobid_from_filename = lambda filename: filename.split('__LinkedIn_')[1].replace('.html','')
+def get_jobid_from_filename(filename):
+
+    try:
+        return filename.split('__LinkedIn_')[1].replace('.html','')
+    except:
+        print(filename, 'failed')
+        return None
 
 check_jobid = lambda jobid_list: lambda filename: get_jobid_from_filename(filename) in jobid_list
 
