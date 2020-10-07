@@ -22,9 +22,14 @@ def get_job_id(soup):
 def get_job_description(soup):
 
     job_descr = None
-    
-    for step in soup.find_all("div", {"class":"jobs-box__html-content jobs-description-content__text t-14 t-black--light t-normal"}):
+    tag = "jobs-box__html-content jobs-description-content__text t-14 t-black--light t-normal"
+    for step in soup.find_all("div", {"class": tag}):    
         job_descr = step.text
+    
+    if job_descr == None:
+        tag = "jobs-box__html-content jobs-description-content__text t-14 t-normal"
+        for step in soup.find_all("div", {"class": tag}): 
+            job_descr = step.text
     
     return job_descr
 
@@ -41,7 +46,12 @@ def get_job_details(soup):
     job_details = None
     for tag in soup.find_all('div',  {'class':"jobs-description-details ember-view"}):
         job_details = tag.text.strip()
-    
+        
+    if job_details == None:
+        job_details = ''
+        for tag in soup.find_all('div',  {'class':"jobs-box__group"}):
+            job_details+=tag.text.strip()+'\n'
+
     job_details_list = get_cleaned_tags(job_details)
     
     return job_details_list
