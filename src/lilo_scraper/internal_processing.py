@@ -4,17 +4,35 @@
 from helpers import get_cleaned_tags
 from helpers import job_detail_keys, get_job_details_dc
 
-def get_job_id(soup):
+def get_job_id(soup, verbose=False):
 
     job_id = None
 
     for step in soup.find_all("meta", {"name":"apple-itunes-app"}):
+        #print(step)
         attr_list = step.attrs['content'].split()
 
         for e in attr_list:
-            if 'voyager' in e:
-                voyager = e
-        job_id = e.split('/jobs/view/')[1].split('/')[0]
+            try:
+                if 'voyager' in e:
+                    splits = ['/jobs/view/','/']
+                    job_id = e.split(splits[0])[1].split(splits[1])[0]
+                    break
+            except:
+                if verbose: print("\tno voyager")
+                pass
+            try:
+                if 'currentJobId=' in e:
+                    splits = ['currentJobId=','&']
+                    job_id = e.split(splits[0])[1].split(splits[1])[0]
+                    break
+            except:
+                if verbose: print("\tno currentJobId")
+                pass
+            
+        if job_id != None:
+            if verbose: print(job_id)
+            break
 
     return job_id
 
