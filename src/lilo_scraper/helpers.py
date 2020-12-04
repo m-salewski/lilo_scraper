@@ -4,7 +4,8 @@
 import datetime
 
 def get_deutsch(trial_text):
-    
+    """
+    """
     if trial_text == None:
         return None
     
@@ -28,7 +29,8 @@ def get_deutsch(trial_text):
 
 
 def get_cleaned_tags(tagtext):
-
+    """
+    """
     if tagtext == None:
         print('tagtext error')
         return None
@@ -62,7 +64,8 @@ job_detail_keys = [
 ]
 
 def get_job_details_dc(job_detail_keys):
-    
+    """
+    """
     # Check for missing keys
     def check_in_list(in_list):
         for k in job_detail_keys:
@@ -93,7 +96,8 @@ def get_job_details_dc(job_detail_keys):
 
 
 def clean_dict(dc):
-
+    """
+    """
     new_dc = {}
     for k,v in dc.items():
 
@@ -119,7 +123,11 @@ def clean_dict(dc):
 
 from datetime import timedelta
 
+
 def get_adj_date(time,today):
+    """
+    """
+    #print(time,today)
     
     if 'month' in time:
         week_multiplier = 28
@@ -130,13 +138,22 @@ def get_adj_date(time,today):
     else:
         week_multiplier = 0
     
-    if time != '--missing--':
-        units = int(time.split('Posted ')[1].split()[0])
+    # Hack! updated from 01.12.2020
+    # TODO: please remove this!!!
+    if 'Posted ' in time:
+        if time != '--missing--':
+            units = int(time.split('Posted ')[1].split()[0])
+        else:
+            units = 0
     else:
-        units = 0
+        if time != '--missing--':
+            units = int(time.split(' ')[0])
+        else:
+            units = 0
+
         
     days_to_subtract = units*week_multiplier
-
+    #print(time,today, days_to_subtract, units)
     adjusted_date = today - timedelta(days=days_to_subtract)
 
     #adjusted_date = str(d.date())#.split(' ')[0].replace('-','.')

@@ -12,10 +12,12 @@ from internal_processing import get_job_title, get_job_id, get_job_description
 
 # Get the location and local files
 
-def get_files(directory = './saved_webpages/'):
+def get_files(directory = './saved_webpages/', verbose=False):
     # bookmark backup directory
     if not os.path.isdir(directory):
         print('Error?', directory)
+    else:
+        if verbose: print("Valid dir.:", directory)
         
     for path, dirs, files in os.walk(directory):
     # If there are any other directory in the backup directory, 

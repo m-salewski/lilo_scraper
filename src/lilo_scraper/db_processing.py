@@ -36,14 +36,17 @@ def get_master_jobids(master_db):
 
 
 def get_jobid_from_filename(filename):
-
+    """
+    """
     try:
         return filename.split('__LinkedIn_')[1].replace('.html','')
     except:
         print(filename, 'failed')
         return None
 
+
 check_jobid = lambda jobid_list: lambda filename: get_jobid_from_filename(filename) in jobid_list
+
 
 def get_jobs_wrapper(directory, status, pdf, verbose=False):
     """
@@ -148,8 +151,10 @@ def get_jobs_df(files, verbose=False):
 
     return pdf_jobs
 
+
 def get_compare_master(pdf_new, master_db):
-    
+    """
+    """
     # Cast the IDs
     pdf_new['Job ID'] = pdf_new['Job ID'].astype(str)    
     # Measure the jobs per status

@@ -17,7 +17,8 @@ from helpers import job_detail_keys, get_job_details_dc, clean_dict, get_deutsch
 from db_processing import get_jobs_wrapper, get_compare_master, update_master
 
 def main(directory, master_db, output_db=None, verbose=False):
-        
+    """
+    """
     # Get the files to process
     files = get_files(directory)
     
