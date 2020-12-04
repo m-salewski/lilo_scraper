@@ -48,5 +48,7 @@ MANIFEST
 
 # Per-project virtualenvs
 .venv*/
-data/master.csv
-.Pipfile*
+Pipfile*
+
+#
+data/*

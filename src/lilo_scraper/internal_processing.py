@@ -231,3 +231,19 @@ def get_applicants_(soup):
     applicants = get_cleaned_tags(applicants)
     
     return applicants
+
+
+def get_easy_apply(soup, verbose=False):
+    """
+    Check if the ad offers "Easy Apply" (only with LinkedIn)
+    """
+    # Usually looks like this:
+    # <span class="artdeco-button__text">
+    tag = soup.find("span", class_="artdeco-button__text", string=re.compile("Easy Apply"))
+    
+    if verbose: print(tag)
+    
+    if tag != None:
+        return True
+    else:
+        return False

@@ -34,13 +34,13 @@ def main(directory, master_db, output_db=None, verbose=False):
     pdf_new = get_jobs_wrapper(directory,'3 Open', pdf_master, verbose)
 
     closed_dir = directory+'Closed/'
-    #pdf_new = get_jobs_wrapper(closed_dir,'2 Closed', pdf_new, verbose)
+    pdf_new = get_jobs_wrapper(closed_dir,'2 Closed', pdf_new, verbose)
         
     applied_dir = directory+'Applied/'
-    #pdf_new = get_jobs_wrapper(applied_dir,'1 Applied', pdf_new, verbose)
+    pdf_new = get_jobs_wrapper(applied_dir,'1 Applied', pdf_new, verbose)
                              
     ignored_dir = directory+'Ignored/'
-    #pdf_new = get_jobs_wrapper(ignored_dir,'0 Ignored', pdf_new, verbose)       
+    pdf_new = get_jobs_wrapper(ignored_dir,'0 Ignored', pdf_new, verbose)       
     
     # TODO: change to include master_db as pdf_master  
     if not master_db: master_db = ''

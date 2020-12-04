@@ -11,12 +11,12 @@ import os, sys
 import pandas as pd
 
 from internal_processing import get_job_details, get_name_and_loc, get_posted_and_applicants
-from internal_processing import get_job_title, get_job_id, get_job_description
+from internal_processing import get_job_title, get_job_id, get_job_description, get_easy_apply
 from file_processing import get_files, rename_files_and_dirs, get_paths
 from helpers import job_detail_keys, get_job_details_dc, clean_dict, get_deutsch, get_adj_date
 
 pdf_jobs_cols = [
-    'pdate', 'Job ID', 'Job title', 'Company Name', 'DE', 'Company Location',
+    'pdate', 'Job ID', 'Job title', 'Easy', 'Company Name', 'DE', 'Company Location',
     'Seniority Level', 'Industry', 'Employment Type', 'Job Functions', 
     'Number of applicants', 'pdatetime', 'Posted Date', 'cdatetime',
     'cdate'
@@ -129,6 +129,8 @@ def get_jobs_df(files, verbose=False):
         got_de = get_deutsch(get_job_description(soup))
         dc['DE'] = str(got_de)
 
+        easy_apply = get_easy_apply(soup)
+        dc['Easy'] = str(easy_apply)
         
         # Create DF-row
         pdf_o = pd.DataFrame(dc, index=[0])
