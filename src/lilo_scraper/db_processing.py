@@ -100,6 +100,8 @@ def get_jobs_wrapper(directory, status, pdf, verbose=False):
            f"{len(file_ids):4d} IDs in \"{status_str}\" directory {directory}\n" + \
            f"{len(new_job_ids):4d} unprocessed files")    
     
+    # if there are new files, then these should be processed.
+    # NOTE: this is only determined by the count of IDs
     if len(new_job_ids)>0:
             
         #Get the filenames for the new IDs
@@ -199,8 +201,10 @@ def get_jobs_df(files, verbose=False):
         pdf_o['cdatetime'] = cdatetime
         pdf_o['cdate']     = cdatetime.date()
 
-
-        pdf_o["Job ID"] = get_job_id(soup)
+        job_id = get_job_id(soup)
+        if job_id == None:
+            job_id = "None"
+        pdf_o["Job ID"] = job_id
         
         pdf_jobs = pd.concat([pdf_jobs,pdf_o], sort=False).reset_index(drop=True)
         nn+=1
