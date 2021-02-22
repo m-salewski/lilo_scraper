@@ -5,7 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import sys
-import os
+import os, shutil
 
 #from internal_processing import get_job_details, get_name_and_loc, get_posted_and_applicants
 from internal_processing import get_job_title, get_job_id, get_job_description
@@ -62,7 +62,7 @@ def get_source_dir(filename, directory, verbose=False):
         
 
 #strings_to_check_for = ["|", "(", ")", ".html.", ".m.b.H.", "html.html", "html_files", "files_files"]
-strings_to_check_for = ["|", "(", ")","-", ",", ".", "html", "&"]
+strings_to_check_for = ["|", "(", ")","-", ",", ".", "html", "&", "*"]
 
 def remove_substrings(checklist):
     
@@ -104,18 +104,27 @@ def rename_files_and_dirs(files, directory = './saved_webpages/', verbose=False)
         newname = newname+f"_{job_id}"
             
         #source_dpath, change_dirname = get_source_dir(file_, directory, verbose)
-        
+        # Rename the html files
         source_fpath = os.path.join(directory,file_)
         dest_fpath = os.path.join(directory,newname+'.html')
         
         if os.path.isfile(source_fpath):
             os.rename(source_fpath,dest_fpath)
         
+        # Move the residual directory (Maybe just delete?)
         source_dpath = os.path.join(directory,file_.replace('.html', "_files"))
+        
         dest_dpath = os.path.join(dirs,newname+'_files')
         
-        if os.path.isdir(source_dpath):
-            os.rename(source_dpath,dest_dpath)
+        #if os.path.isdir(source_dpath):
+            #print('Removing')
+            #os.removedirs(source_dpath)
+            #os.rename(source_dpath,dest_dpath)
+                
+        try:
+            shutil.rmtree(source_dpath)
+        except OSError as e:
+            print ("Error: %s - %s." % (e.filename, e.strerror))                
 
     return None
 
