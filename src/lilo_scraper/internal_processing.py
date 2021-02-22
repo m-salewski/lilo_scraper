@@ -17,16 +17,21 @@ def get_job_id(soup, verbose=False):
         for e in attr_list:
             try:
                 if 'voyager' in e:
+                    
                     splits = ['/jobs/view/','/']
                     job_id = e.split(splits[0])[1].split(splits[1])[0]
+                    if '?' in job_id:
+                        job_id = job_id.split('?')[0]
                     break
             except:
                 if verbose: print("\tno voyager")
                 pass
+            
             try:
                 if 'currentJobId=' in e:
                     splits = ['currentJobId=','&']
                     job_id = e.split(splits[0])[1].split(splits[1])[0]
+                    if verbose: print('currentJobId=', job_id)
                     break
             except:
                 if verbose: print("\tno currentJobId")
@@ -35,7 +40,9 @@ def get_job_id(soup, verbose=False):
         if job_id != None:
             if verbose: print(job_id)
             break
-
+        
+    print(job_id)
+    
     return job_id
 
 

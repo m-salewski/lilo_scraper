@@ -83,11 +83,12 @@ def rename_files_and_dirs(files, directory = './saved_webpages/', verbose=False)
     dirs = directory + 'dirs/'
     
     for file_ in files:
-
+        #if verbose: print('Trying:',file_)
+        #if verbose: print([True for s in [' ']+strings_to_check_for[:-2] if s in file_.split('.html')[0]])
         # Check if the file is already processed  
         #print(file_.split('.')[0])
         #print([s for s in [' ']+strings_to_check_for[:-2] if s in file_])
-        if any([True for s in [' ']+strings_to_check_for[:-2] if s in file_.split('.')[0]]):
+        if any([True for s in [' ']+strings_to_check_for[:-2] if s in file_.split('.html')[0]]):
             if verbose: print('Processing:',file_)
         else:
             if verbose: print('\t\tAlready processed:',file_)
