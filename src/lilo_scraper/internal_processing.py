@@ -40,8 +40,6 @@ def get_job_id(soup, verbose=False):
         if job_id != None:
             if verbose: print(job_id)
             break
-        
-    print(job_id)
     
     return job_id
 
@@ -99,6 +97,7 @@ def get_name_and_loc(soup):
     
     Note: these were usually together in a tag 
     """
+    #TODO: check to see if this can be superceded by json-scraping
     # Get the name of the company and the location
     name_and_loc = []
     # Legacy version; until 01.12.2020
@@ -117,7 +116,8 @@ def get_name_and_loc(soup):
                 for k in tt.attrs['class']:
                     # Note: 'subtitle-primary-grouping' is not unique to getting the company's name
                     if 'subtitle-primary-grouping' in k:
-                        name = tt.text.strip().split()[0]             
+                        # NOTE: this may not work;
+                        name = tt.text.strip().split('\n\n')[0].strip()
                         break
 
         loc = tags.find('span', {'class':"jobs-unified-top-card__bullet"}).text.strip()
@@ -155,7 +155,8 @@ def get_posted_and_applicants(soup):
 
 
 def get_date_posted(soup):
-
+    """
+    """
     date_posted = soup.find('span', string=re.compile(" ago"))
     #NOTE: this could also contain "Posted (.*) ago"
     
@@ -173,7 +174,8 @@ def get_date_posted(soup):
     
     
 def get_applicants(soup):
-    
+    """
+    """
     # Works as planned!
     try:
         for t in soup.find_all(string=re.compile(" applicant")):        
@@ -214,6 +216,7 @@ def get_applicants(soup):
 
     # Reporting the results
     return final_result
+
 
 def get_applicants_(soup): 
     """
