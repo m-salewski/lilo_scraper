@@ -15,6 +15,8 @@ from internal_processing import get_job_title, get_job_id, get_job_description, 
 from file_processing import get_files, rename_files_and_dirs, get_paths
 from helpers import job_detail_keys, get_job_details_dc, clean_dict, get_deutsch, get_adj_date
 
+from utils import verbprint
+
 pdf_jobs_cols = [
     'pdate', 'Job ID', 'Job title', 'Easy', 'Company Name', 'DE', 'Company Location',
     'Seniority Level', 'Industry', 'Employment Type', 'Job Functions', 
@@ -45,41 +47,95 @@ def get_jobid_from_filename(filename):
         return None
 
 
+# jobid_list comes from the DataFrame
+# filename comes from the directory
 check_jobid = lambda jobid_list: lambda filename: get_jobid_from_filename(filename) in jobid_list
 
 
 def get_jobs_wrapper(directory, status, pdf, verbose=False):
     """
     A wrapper for get_jobs: contains fewer functions for tidyness
+    
+    1. Get all filenames in the current dir
+    2. Get all job IDs from the DF
+    3. Get current status job IDs from the DF
+    4. Checks
+        1. check if files in dir are already processed (ie in the main DF)
+        2. check if files in dir are already processed for other status
+            - if so, change their status only and do not process _them_
+    5. Return DF
     """
+    vprint = verbprint(verbose)
+
+    status_str = status.split(' ')[1]
+     
+    # 1. Get the Job IDs from the files in the current dir 
+    # (should only work if already renamed)
     files = get_files(directory)
     
-    jobids = []
+    file_ids = []
+    if files != []:
+        file_ids = [get_jobid_from_filename(f) for f in files]
+    
+    # 2. Get all Job IDs from the DataFrame
+    # 3. Get current status job IDs from the DF
+    old_pdf_ids = []
+    all_pdf_ids = []
     if pdf.empty == False:
-        jobids = pdf['Job ID'].astype(str).tolist()
+        pdf_out = pdf.copy()
+        all_pdf_ids = pdf['Job ID'].astype(str).unique().tolist()        
+        old_pdf_ids = pdf[pdf['Status']==status]['Job ID'].astype(str).tolist()
+    else:
+        pdf_out = pd.DataFrame()
     
-    if (len(files)>0) & (len(jobids) > 0):    
-        files = [f for f in files if not check_jobid(jobids)(f)]
-        
     pdf_new = pd.DataFrame()
-    status_str = status.split(' ')[1]
+        
+    # 4. Checks
+    # 4.1. Check the Job IDs in the current DataFrame; get the complement
+    #    if new files, process; else, ignore
+    new_job_ids = list(set(file_ids).difference(set(all_pdf_ids)))
     
-    if len(files)>0:
-        if verbose: print(f'Processing new {status_str} files')
-        files = [directory+f for f in files]
-        pdf_new = get_jobs_df(files,verbose)
-        pdf_new['Status'] = status
+    vprint(f"{len(all_pdf_ids):4d} total processed IDs\n" + \
+           f"{len(old_pdf_ids):4d} \"{status_str}\" IDs processed\n" + \
+           f"{len(file_ids):4d} IDs in \"{status_str}\" directory {directory}\n" + \
+           f"{len(new_job_ids):4d} unprocessed files")    
+    
+    if len(new_job_ids)>0:
+            
+        #Get the filenames for the new IDs
+        ff = [directory+f for f in files if check_jobid(new_job_ids)(f)]
+        
+        vprint(f'Processing {len(ff)} new {status_str} files')        
+        
+        pdf_new = get_jobs_df(ff,verbose)
+        pdf_new['Status'] = status  
+        pdf_out = pd.concat([pdf_out, pdf_new], sort=False)
         
     else: #elif pdf_new.empty:
-        if verbose: print(f'No new {status_str} files')        
-        return pdf
+        vprint(f'No new {status_str} files')
     
-    if (pdf is not None) & (pdf_new.empty == False):
-        if verbose: print(f'Adding new {status_str} files')        
-        return pd.concat([pdf, pdf_new], sort=False)    
+    # 4.2. check if files in dir are already processed for other status
+    #  Get the processed Job IDs with other status
+    # These are in the DF but are not current status
+    changed_pdf_ids = []
+    if pdf.empty == False:
+        changed_pdf_ids = pdf[(pdf['Job ID'].isin(file_ids)) & \
+                              (pdf['Status']!=status)]['Job ID'].astype(str).tolist()
+        
+    #. 4.2.1. If any remaining, change their status only and do not process _them_
+    if (len(changed_pdf_ids)>0):
+        vprint(f'Swapping status for {len(changed_pdf_ids)} IDs')
+        pdf_out.loc[(pdf_out['Job ID'].isin(changed_pdf_ids)), ['Status']]=status        
+    
+    else: #elif pdf_new.empty:
+        vprint(f'No files swapped to {status_str} status')
+        
+    # 
+    if (len(changed_pdf_ids) == 0) & (len(new_job_ids) == 0):
+        vprint(f'No changes for {status_str} files')
+        return pdf.drop_duplicates()
     else:
-        if verbose: print(f'Only new {status_str} files')
-        return pdf_new
+        return pdf_out.drop_duplicates()
 
 
 def get_jobs_df(files, verbose=False):
@@ -90,14 +146,15 @@ def get_jobs_df(files, verbose=False):
       verbose (bool): a flag for printing info
     """
     
+    vprint = verbprint(verbose)     
+    
     # Create empty DF to store results
     pdf_jobs = pd.DataFrame()
 
     nn=1
     for filename in files:
         
-        if verbose:
-            print(f'{nn} of {len(files)}, {filename}')
+        vprint(f'{nn} of {len(files)}, {filename}')
         
         # Get the creation date of the html
         cdatetime = datetime.datetime.fromtimestamp(os.path.getctime(filename))
