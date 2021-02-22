@@ -1,29 +1,31 @@
 #!/usr/bin/envthon
 # coding: utf-8
 
-import requests
-from bs4 import BeautifulSoup
-from pandas import DataFrame
-import re
-import datetime
+#import requests
+#from bs4 import BeautifulSoup
+#from pandas import DataFrame
+#import re
+#import datetime
 import argparse
-import os, sys
+import os
 import pandas as pd
 
-from internal_processing import get_job_details, get_name_and_loc, get_posted_and_applicants
-from internal_processing import get_job_title, get_job_id, get_job_description
+#from internal_processing import get_job_details, get_name_and_loc, get_posted_and_applicants
+#from internal_processing import get_job_title, get_job_id, get_job_description
 from file_processing import get_files, rename_files_and_dirs, get_paths
-from helpers import job_detail_keys, get_job_details_dc, clean_dict, get_deutsch, get_adj_date
+#from helpers import job_detail_keys, get_job_details_dc, clean_dict, get_deutsch, get_adj_date
 from db_processing import get_jobs_wrapper, get_compare_master, update_master
 
 def main(directory, master_db, output_db=None, verbose=False):
     """
     """
+    open_dir = directory+'Open/'    
+    
     # Get the files to process
-    files = get_files(directory)
+    files = get_files(open_dir)
     
     # rename the files (if needed)
-    rename_files_and_dirs(files, directory, verbose)
+    rename_files_and_dirs(files, open_dir, verbose)
 
     pdf_master = pd.DataFrame()
     if master_db:
@@ -31,7 +33,7 @@ def main(directory, master_db, output_db=None, verbose=False):
             pdf_master = pd.read_csv(master_db)        
         
     # Process and create the DataFrame
-    pdf_new = get_jobs_wrapper(directory,'3 Open', pdf_master, verbose)
+    pdf_new = get_jobs_wrapper(open_dir,'3 Open', pdf_master, verbose)
 
     closed_dir = directory+'Closed/'
     pdf_new = get_jobs_wrapper(closed_dir,'2 Closed', pdf_new, verbose)

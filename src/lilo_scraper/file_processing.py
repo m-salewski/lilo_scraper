@@ -1,4 +1,4 @@
-#!/usr/bin/envthon
+    #!/usr/bin/envthon
 # coding: utf-8
 
 import requests
@@ -24,11 +24,11 @@ def get_files(directory = './saved_webpages/', verbose=False):
     # we need to stop the process and get the backup files only
         if path == directory:
             break
-        
-    files = sorted(files) # sort all the backup files
+    if files:
+        return sorted(files) # sort all the backup files
+    else:
+        return []
     
-    return files
-
 def get_job_id_wrapper(filename):
         
         # Open the file and soup it
@@ -79,6 +79,7 @@ def remove_substrings(checklist):
 
 def rename_files_and_dirs(files, directory = './saved_webpages/', verbose=False):
 
+    if verbose: print(f'Processing {len(files)} files')
     dirs = directory + 'dirs/'
     
     for file_ in files:
