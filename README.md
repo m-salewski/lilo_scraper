@@ -45,7 +45,6 @@ This generates a CVS which can be read in any way you like. However, I find it u
    - `jshow` generates a smaller CSV to be (re)read directly from the command line using `column`
     	
 	 <img src="figures/term_jshow.png" alt="drawing" width="1000"/>
-	<!--`![](figuresterm_jshow.png  =250x)`    -->
 		
 	- it thins down the information and also uses abbreviations to cut down on space.
 		
