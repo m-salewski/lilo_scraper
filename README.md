@@ -45,9 +45,7 @@ This generates a CVS which can be read in any way you like. However, I find it u
    - `jshow` generates a smaller CSV to be (re)read directly from the command line using `column`
     	
 	 <img src="figures/term_jshow.png" alt="drawing" width="1000"/>
-		
-	- it thins down the information and also uses abbreviations to cut down on space.
-		
+				
 - `jread` takes a Job ID and then prints out that specific entry with the full details of the job advertisement. 
 
  
