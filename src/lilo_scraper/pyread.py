@@ -47,9 +47,8 @@ from itertools import permutations
 gtags = ['/'.join(l) for l in permutations(['m', 'd','w'], 3)]
 gtags += [l.replace('w','f') for l in gtags]
 gtags += [l.replace('d','x') for l in gtags]
-gtags += [l.upper() for l in gtags]
-gtags = ["("+l+")" for l in gtags]
-
+gtags += [l.replace('d','*') for l in gtags]
+gtags = [l.upper() for l in gtags]
 
 def remove_gender_tags(gender_tags):
     
@@ -57,9 +56,10 @@ def remove_gender_tags(gender_tags):
     
         for gtag in gender_tags:
             if gtag in source_str:
-                return source_str.replace(gtag, '')
+                out = source_str.replace(gtag.upper(), '')
+                return out.replace('()','').strip()
                 
-        return source_str
+        return source_str.strip()
     
     return meth
 
@@ -69,6 +69,7 @@ remove_gtags=remove_gender_tags(gtags)
 def df_processing(df):
     
     first_pass = {
+        "Data Science": "DS",
         "Data Scientist": "DS", 
         "Data Engineer": "DE", 
         "Data Analyst": "DA", 
@@ -78,17 +79,23 @@ def df_processing(df):
         "Research Engineer": "Res. Eng.",
         "Deep Learning":"DL"
         }
-
+    #first_pass.update(**dict((k.upper(), v) for k, v in first_pass.items()) )
     next_pass = {
         "Modelling": "Model.", 
         "Senior": "Sen.", 
         "Junior": "Jr.", 
         "Machine Learning": "ML",
-        "Researcher": "Res.",
+        "Engineer": "Eng.",
+        "Research": "Res.",
+        "Researcher": "Res.",        
         "Analyst": "Anal.",
-        "Scientist": "Sci.",    
+        "Scientist": "Sci.", 
+        "Ml":"ML",
+        "Dl":"DL",
+        "Cv":"CV"
         }
-
+    #next_pass.update(**dict((k.upper(), v) for k, v in next_pass.items()) )
+    
     df['DE'] = df['DE'].astype(int).astype(str)
     df.loc[(df['DE']=='0'), ['DE']] = ''
     
@@ -98,6 +105,7 @@ def df_processing(df):
     df['Level']  = df['Seniority Level'].apply(lambda s: s.replace(' level',''))
     
     df['Job title'] = df['Job title'] \
+            .apply(lambda s: s.title()) \
             .apply(rename_job(first_pass)) \
             .apply(rename_job(next_pass)) \
             .apply(remove_gtags)
