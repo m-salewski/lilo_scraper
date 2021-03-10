@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+
+LILOHTMLDIR="../../../linkedin_local_scraper/saved_webpages_test/"
+MASTERCSV="../../data/master_test_test2.csv"
+
+alias lilos='python3 lilo_scraping.py -d "$LILOHTMLDIR" -o "$MASTERCSV" -v'
+
+colprint(){
+    : '
+    Prints out a DB to the terminal, ignoring the header
+    -s uses the delimiter to parse the columns
+    -t creates a tabular format 
+    -n prevents merging of delimiters (ie empty entries)
+    '
+    tail -n $1 $2 | column -s '%' -t -n
+}
+
+filprint(){
+    : '
+    Prints out a DB to the terminal, ignoring the header
+    -s uses the delimiter to parse the columns
+    -t creates a tabular format 
+    -n prevents merging of delimiters (ie empty entries)
+    '
+    tail -n $1 $2 | awk -F'%' -v v1=$3 -v v2=$4 '$v1==v2' | column -s '%' -t -n
+}
+
+jshow(){
+
+   TEMPOUT="./temp_output.csv"
+    
+    # Check if the master DB has been modified; 
+    # change summary DB if so
+    if [ "$TEMPOUT" -ot "$MASTERCSV" ]; then
+        
+        #echo "$MASTERCSV is newer than $TEMPOUT"
+        #ls -lt "$TEMPOUT"
+        #ls -lt "$MASTERCSV"
+        
+        echo "Updating output file ... "
+        python3 pyread.py -m "$MASTERCSV" -r 1
+        echo -e "\n"
+    fi
+    
+    # Print out the header; 
+    # since `column` does not sort(?)
+    column -s '%' -t -n "$TEMPOUT" | head -n 1
+    # (print a line under the header for aethetics!)
+    CHARS=$(column -s '%' -t -n "$TEMPOUT" | head -n 1 | wc -m)
+    printf "%0.s-" `seq 1 $CHARS`; printf "\n"
+    
+    # Get the non-header rows 
+    LINES=$(wc -l temp_output.csv | awk '{print $1"-1"}' | bc)
+    
+    # NOTE: "$1" can be _anything_
+    if [ -z "$1" ]
+    then
+        colprint $LINES "$TEMPOUT" | sort -k1 -r
+    else
+        colprint $LINES "$TEMPOUT" | sort -k1
+    fi        
+
+#    column -s '%' -t -n "$TEMPOUT"
+    : '
+    -s uses the delimiter to parse the columns
+    -t creates a tabular format 
+    -n prevents merging of delimiters (ie empty entries)
+    '
+}
+
+jfilt(){
+    
+    # Assume the master file has not been modified
+    TEMPOUT="./temp_output.csv"
+    
+    # Print out the header; 
+    # since `column` does not sort(?)
+    column -s '%' -t -n "$TEMPOUT" | head -n 1
+    # (print a line under the header for aethetics!)
+    CHARS=$(column -s '%' -t -n "$TEMPOUT" | head -n 1 | wc -m)
+    printf "%0.s-" `seq 1 $CHARS`; printf "\n"
+    
+    # Get the non-header rows 
+    LINES=$(wc -l temp_output.csv | awk '{print $1"-1"}' | bc)
+    
+    # NOTE: "$1" can be _anything_
+    if [ -z "$1" ]
+    then
+        filprint $LINES "$TEMPOUT" "$1" "$2" | sort -k1 -r
+    else
+        filprint $LINES "$TEMPOUT" "$1" "$2" | sort -k1
+    fi       
+
+#    column -s '%' -t -n "$TEMPOUT"
+    : '
+    -s uses the delimiter to parse the columns
+    -t creates a tabular format 
+    -n prevents merging of delimiters (ie empty entries)
+    '
+}
+
+jread(){
+    : '
+    The func reads in an ID number and prints the job description 
+    from the original html file
+    
+    It has to do some processing; better to just look-up from DB
+    '
+    python3 job_description.py -jid $1 | less
+    }
