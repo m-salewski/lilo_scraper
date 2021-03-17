@@ -108,3 +108,20 @@ jread(){
     '
     python3 job_description.py -jid $1 | less
     }
+
+jmove(){
+
+    # NOTE: "$2" can be _anything_
+    if [ -z "$2" ]
+    then
+        DESTDIR="Applied"
+    else
+        DESTDIR="$2"
+    fi
+
+    BASEPATH="../../../linkedin_local_scraper/saved_webpages_test"
+
+    #echo "$BASEPATH"/"$DESTDIR"
+    mv "$BASEPATH"/Open/*"$1"*.html "$BASEPATH"/"$DESTDIR"/
+
+}
