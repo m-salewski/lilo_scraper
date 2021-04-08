@@ -3,6 +3,8 @@
 
 from helpers import get_cleaned_tags
 from helpers import job_detail_keys, get_job_details_dc
+from helpers import strings_to_check_for, remove_substrings
+
 import re
 
 def get_job_id(soup, verbose=False):
@@ -70,8 +72,8 @@ def get_job_title(soup):
         # Update 01.12.2020
         job_title = soup.find('h1',  {'class':"t-24"}).text.strip()
         #job_title = ['Job title', job_title]
-        
-    return job_title
+
+    return remove_substrings(strings_to_check_for)(job_title)
 
 
 def get_job_details(soup):

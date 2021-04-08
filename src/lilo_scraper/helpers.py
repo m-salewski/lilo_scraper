@@ -28,6 +28,25 @@ def get_deutsch(trial_text):
         return False
 
 
+#strings_to_check_for = ["|", "(", ")", ".html.", ".m.b.H.", "html.html", "html_files", "files_files"]
+strings_to_check_for = ["|", "(", ")","-", ",", ".", "html", "&", "*"]
+
+def remove_substrings(checklist):
+    """
+    Function to remove specific chars from a string, like a filename or job title.	
+    """
+    def inner(string_to_check):
+
+            output_string = string_to_check
+
+            while any([True for s in checklist if s in output_string]):            
+                for s in checklist:
+                    output_string = output_string.replace(s,"")
+            return output_string
+
+    return inner
+
+
 def get_cleaned_tags(tagtext):
     """
     """

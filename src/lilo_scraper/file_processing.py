@@ -9,6 +9,7 @@ import os, shutil
 
 #from internal_processing import get_job_details, get_name_and_loc, get_posted_and_applicants
 from internal_processing import get_job_title, get_job_id, get_job_description
+from helpers import strings_to_check_for, remove_substrings
 
 # Get the location and local files
 
@@ -59,23 +60,7 @@ def get_source_dir(filename, directory, verbose=False):
         
         
     return source_fpath, change_dirname
-        
 
-#strings_to_check_for = ["|", "(", ")", ".html.", ".m.b.H.", "html.html", "html_files", "files_files"]
-strings_to_check_for = ["|", "(", ")","-", ",", ".", "html", "&", "*"]
-
-def remove_substrings(checklist):
-    
-    def inner(string_to_check):
-            
-            output_string = string_to_check
-            
-            while any([True for s in checklist if s in output_string]):            
-                for s in checklist:
-                    output_string = output_string.replace(s,"")
-            return output_string
-        
-    return inner
 
 def rename_files_and_dirs(files, directory = './saved_webpages/', verbose=False):
 
