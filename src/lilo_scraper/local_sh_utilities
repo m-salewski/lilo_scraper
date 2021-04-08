@@ -125,3 +125,16 @@ jmove(){
     mv "$BASEPATH"/Open/*"$1"*.html "$BASEPATH"/"$DESTDIR"/
 
 }
+jfind(){ 
+	result=$(find ../../../linkedin_local_scraper/saved_webpages_test -name "*$1*.html" | \
+	grep -e "Applied\|Open\|Ignored\|Closed")
+	loc=$(echo $result | awk -F'/' '{print $(NF-1)}')
+	
+	jobid=$(echo $result | awk -F'LinkedIn_' '{print $NF}' | sed "s|.html||g")
+	
+	echo "$result $loc $jobid"
+}
+
+jgrep(){
+	jshow | grep $1
+}
