@@ -44,19 +44,17 @@ This generates a CVS which can be read in any way you like. However, I find it u
 
    - `jshow` generates a smaller CSV to be (re)read directly from the command line using `column`
     	
-	 <img src="figures/term_jshow.png" alt="drawing" width="1000"/>
-	<!--`![](figuresterm_jshow.png  =250x)`    -->
-		
-	- it thins down the information and also uses abbreviations to cut down on space.
-
-	- There are a number of functions to access and manipulate htmls based on there Job ID number:
-		- `jread` takes a Job ID and then prints out that specific entry with the full details of the job advertisement. 
-		- `jfilt` this is a special filter which shows when the "DE" column has a "1" in it
-		- `jmove` moves htmls to a specified location
-		- `jfind` gets the location of the html with the Job ID
-		- `jgrep`, is an alias for `jshow | grep <JobID>`
-		- **Note** the Job ID is always given in the column of the table printed from `jshow`
+    <img src="figures/term_jshow.png" alt="drawing" width="1000"/>
  
+    - it thins down the information and also uses abbreviations to cut down on space.
+    - There are a number of functions to access and manipulate htmls based on there Job ID number:
+        - `jread` takes a Job ID and then prints out that specific entry with the full details of the job advertisement. 
+        - `jfilt` this is a special filter which shows when the "DE" column has a "1" in it
+        - `jmove` moves htmls to a specified location
+        - `jfind` gets the location of the html with the Job ID
+        - `jgrep`, is an alias for `jshow | grep <JobID>`
+        - **Note** the Job ID is always given in the column of the table printed from `jshow`
+
 ## Known Issues
 
 
