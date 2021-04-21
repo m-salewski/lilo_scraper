@@ -101,13 +101,44 @@ jfilt(){
 
 jread(){
     : '
-    The func reads in an ID number and prints the job description 
-    from the original html file
+    The func reads in an ID number **OR** a filepath, 
+    and prints the job description from the original html file
     
-    It has to do some processing; better to just look-up from DB
+    It has to do some processing:
+    - find the file path
+    - parse file path 
+    - scrape html
+    - output
+    
+    Would be better to just look-up from DB
     '
-    python3 job_description.py -jid $1 | less
+    # Assume standard root location for htmls
+    DIR="../../../linkedin_local_scraper/saved_webpages_test/"    
+    
+    # This `if` is also no needed, unless we're dealing with the path
+    if [[ "$1" == *"html"* ]]; then
+
+        # Just rename this to a new variable
+        HTMLF="$1"
+    else
+        # Find the file path associated with Job-ID
+        # TODO: need safety in case of nonexistent or multiple files
+        HTMLF=`(find "$LILOHTMLDIR" -name "*$1*" -type f)` 
+         
+    fi    
+    
+    # Split the file path into subdirectory 
+    # (since all not in standard location after root)
+    SUBDIR=`(echo "$HTMLF" | awk -F"$LILOHTMLDIR" '{print $2}' | awk -F'/' '{print $1}')`
+
+    # Isolate the Job-ID (this is legacy since $1 _is_ it)
+    JID=`(echo "$HTMLF" | awk -F"LinkedIn_" '{print $2}' | awk -F'.html' '{print $1}')`       
+        
+    # Read the job desc. from the file
+    python3 job_description.py -d "$LILOHTMLDIR$SUBDIR/" -jid $JID | less
+    
     }
+
 
 jmove(){
 
