@@ -5,6 +5,8 @@ from helpers import get_cleaned_tags
 from helpers import job_detail_keys, get_job_details_dc
 from helpers import strings_to_check_for, remove_substrings
 
+from datetime import datetime
+
 import re
 
 def get_job_id(soup, verbose=False):
@@ -42,6 +44,9 @@ def get_job_id(soup, verbose=False):
         if job_id != None:
             if verbose: print(job_id)
             break
+
+    if job_id == None:
+        job_id = str(int(datetime.now().timestamp()*1000))[3:]
     
     return job_id
 

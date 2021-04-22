@@ -49,7 +49,11 @@ def get_jobid_from_filename(filename):
 
 # jobid_list comes from the DataFrame
 # filename comes from the directory
-check_jobid = lambda jobid_list: lambda filename: get_jobid_from_filename(filename) in jobid_list
+def check_jobid(jobid_list): 
+    def meth(filename): 
+        jobid = get_jobid_from_filename(filename)
+        return (jobid in jobid_list)# | (int(jobid) > 9_000_000_000)
+    return meth
 
 
 def get_jobs_wrapper(directory, status, pdf, verbose=False):
@@ -202,8 +206,12 @@ def get_jobs_df(files, verbose=False):
         pdf_o['cdate']     = cdatetime.date()
 
         job_id = get_job_id(soup)
-        if job_id == None:
-            job_id = "None"
+        #NOTE: this is a hack!
+        # The filename _should_ have the Hob ID already, but it's not guaranteed!
+        job_id_f = get_jobid_from_filename(filename)
+        if (job_id == None) | (job_id != job_id_f):
+            #job_id = "None"
+            job_id = job_id_f
         pdf_o["Job ID"] = job_id
         
         pdf_jobs = pd.concat([pdf_jobs,pdf_o], sort=False).reset_index(drop=True)
